@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="TechZone — Premium Computer Store, PC Components, CPUs, GPUs, RAM, SSDs, and Gaming Gear." />
+    <title>TechZone — Home Page & Premium Hardware Store</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet" />
+
+    <!-- Dedicated Home Page Stylesheet -->
+    <link rel="stylesheet" href="css/home.css" />
+</head>
+<body>
+
+    <!-- ─── Announcement Bar ─── -->
+    <div class="announcement">
+        <span><i class="live-dot"></i> FREE ISLANDWIDE DELIVERY ON ORDERS OVER RS. 50,000</span>
+        <span>•</span>
+        <span>100% Genuine Products · Official Manufacturer Warranty</span>
+    </div>
+
+    <!-- ─── Header ─── -->
+    <header class="header">
+        <a class="logo" href="index.html" aria-label="TechZone Home">
+            <span class="logo-mark">T</span>
+            <span>TECH<span>ZONE</span></span>
+        </a>
+
+        <nav class="nav" aria-label="Main navigation" id="mainNav">
+            <a class="active" href="index.html">Home</a>
+            <a href="#shop">Categories</a>
+            <a href="#featured">Products</a>
+            <a href="#deals">Cyber Deals</a>
+            <a href="#whyus">Why Us</a>
+            <a href="#reviews">Reviews</a>
+        </nav>
+
+        <div class="header-actions">
+            <button class="icon-btn" id="searchBtn" aria-label="Search Components">⌕</button>
+            <button class="login-btn" id="loginBtn">Login</button>
+            <button class="cart-btn" id="cartBtn">
+                Cart <span id="cartCount">0</span>
+            </button>
+            <button class="menu-btn" id="menuBtn" aria-label="Toggle Mobile Menu">☰</button>
+        </div>
+    </header>
+
+    <!-- ─── Main Content ─── -->
+    <main>
+
+        <!-- ── HERO SECTION ── -->
+        <section class="hero" id="home">
+            <div class="hero-copy">
+                <div class="pill"><span></span> THE PC HARDWARE EXPERTS</div>
+                <h1>Build something<br><em>powerful.</em></h1>
+                <p>Discover flagship processors, high-performance GPUs, blazing fast NVMe SSDs, and custom cooling built for gamers, creators, and professionals.</p>
+
+                <div class="hero-actions">
+                    <a href="#featured" class="primary-btn">
+                        Explore Components <span>→</span>
+                    </a>
+                    <a href="#shop" class="secondary-btn">
+                        Browse Categories
+                    </a>
+                </div>
+
+                <div class="trust-row">
+                    <div>
+                        <strong>10K+</strong>
+                        <span>Hardware Parts</span>
+                    </div>
+                    <div>
+                        <strong>100%</strong>
+                        <span>Genuine Guarantee</span>
+                    </div>
+                    <div>
+                        <strong>24/7</strong>
+                        <span>Expert Support</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hero Showcase Graphic -->
+            <div class="hero-showcase">
+                <span class="showcase-badge">FLAGSHIP RTX 50 SERIES</span>
+                
+                <img src="images/hero_rtx5090.png" alt="NVIDIA GeForce RTX 5090 Flagship GPU" class="hero-showcase-img" />
+
+                <div class="visual-lines">RTX 5090 32GB GDDR7</div>
+
+                <div class="spec-card">
+                    <div><span>GPU</span><strong>RTX 5090 32GB</strong></div>
+                    <div><span>MEMORY</span><strong>DDR5 7200</strong></div>
+                    <div><span>STORAGE</span><strong>GEN5 NVMe</strong></div>
+                    <div><span>BUILD</span><strong>READY</strong></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── SHOP BY CATEGORY ── -->
+        <section class="section" id="shop">
+            <div class="section-head">
+                <div>
+                    <span class="overline">SHOP BY CATEGORY</span>
+                    <h2>Find your <span>upgrade.</span></h2>
+                </div>
+                <a href="#featured" class="text-link">View all components →</a>
+            </div>
+
+            <div class="category-grid">
+                <!-- 01 Processors -->
+                <button class="category-card" data-category="CPU">
+                    <div class="category-number">01</div>
+                    <div class="category-img-wrap">
+                        <img src="images/intel_cpu.png" alt="Processors CPU" class="category-img" />
+                    </div>
+                    <div>
+                        <h3>Processors</h3>
+                        <p>Intel · AMD</p>
+                    </div>
+                    <span class="arrow">↗</span>
+                </button>
+
+                <!-- 02 Graphics -->
+                <button class="category-card" data-category="GPU">
+                    <div class="category-number">02</div>
+                    <div class="category-img-wrap">
+                        <img src="images/msi_gpu.png" alt="Graphics GPU" class="category-img" />
+                    </div>
+                    <div>
+                        <h3>Graphics</h3>
+                        <p>NVIDIA · AMD</p>
+                    </div>
+                    <span class="arrow">↗</span>
+                </button>
+
+                <!-- 03 Memory -->
+                <button class="category-card" data-category="RAM">
+                    <div class="category-number">03</div>
+                    <div class="category-img-wrap">
+                        <img src="images/corsair_ram.png" alt="Memory RAM" class="category-img" />
+                    </div>
+                    <div>
+                        <h3>Memory</h3>
+                        <p>DDR4 · DDR5</p>
+                    </div>
+                    <span class="arrow">↗</span>
+                </button>
+
+                <!-- 04 Storage -->
+                <button class="category-card" data-category="Storage">
+                    <div class="category-number">04</div>
+                    <div class="category-img-wrap">
+                        <img src="images/samsung_ssd.png" alt="Storage SSD" class="category-img" />
+                    </div>
+                    <div>
+                        <h3>Storage</h3>
+                        <p>NVMe · SATA</p>
+                    </div>
+                    <span class="arrow">↗</span>
+                </button>
+
+                <!-- 05 Motherboards -->
+                <button class="category-card" data-category="Motherboard">
+                    <div class="category-number">05</div>
+                    <div class="category-img-wrap">
+                        <img src="images/mobo.png" alt="Motherboard" class="category-img" />
+                    </div>
+                    <div>
+                        <h3>Motherboards</h3>
+                        <p>ASUS · MSI</p>
+                    </div>
+                    <span class="arrow">↗</span>
+                </button>
+
+                <!-- 06 Cooling -->
+                <button class="category-card" data-category="Cooling">
+                    <div class="category-number">06</div>
+                    <div class="category-img-wrap">
+                        <img src="images/nzxt_cooler.png" alt="Cooling AIO" class="category-img" />
+                    </div>
+                    <div>
+                        <h3>Cooling</h3>
+                        <p>Liquid · Air</p>
+                    </div>
+                    <span class="arrow">↗</span>
+                </button>
+
+                <!-- 07 Power Supply -->
+                <button class="category-card" data-category="Power">
+                    <div class="category-number">07</div>
+                    <div class="category-img-wrap">
+                        <img src="images/psu.png" alt="Power Supply PSU" class="category-img" />
+                    </div>
+                    <div>
+                        <h3>Power Supply</h3>
+                        <p>80+ Gold · Platinum</p>
+                    </div>
+                    <span class="arrow">↗</span>
+                </button>
+
+                <!-- 08 Peripherals -->
+                <button class="category-card" data-category="Peripherals">
+                    <div class="category-number">08</div>
+                    <div class="category-img-wrap">
+                        <img src="images/razer_mouse.png" alt="Peripherals Gear" class="category-img" />
+                    </div>
+                    <div>
+                        <h3>Peripherals</h3>
+                        <p>Mouse · Keyboard</p>
+                    </div>
+                    <span class="arrow">↗</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- ── FEATURED PRODUCTS ── -->
+        <section class="section featured" id="featured">
+            <div class="section-head">
+                <div>
+                    <span class="overline">HARDWARE INVENTORY</span>
+                    <h2>Built for <span>performance.</span></h2>
+                </div>
+            </div>
+
+            <!-- Filter Pills Bar -->
+            <div class="filter-bar">
+                <button class="filter-pill active" onclick="filterByCategory('ALL', this)">All Parts</button>
+                <button class="filter-pill" onclick="filterByCategory('CPU', this)">CPUs</button>
+                <button class="filter-pill" onclick="filterByCategory('GPU', this)">GPUs</button>
+                <button class="filter-pill" onclick="filterByCategory('RAM', this)">RAM</button>
+                <button class="filter-pill" onclick="filterByCategory('Storage', this)">Storage</button>
+                <button class="filter-pill" onclick="filterByCategory('Motherboard', this)">Motherboards</button>
+                <button class="filter-pill" onclick="filterByCategory('Cooling', this)">Cooling</button>
+                <button class="filter-pill" onclick="filterByCategory('Power', this)">Power</button>
+                <button class="filter-pill" onclick="filterByCategory('Monitors', this)">Monitors</button>
+                <button class="filter-pill" onclick="filterByCategory('Cases', this)">Casings</button>
+                <button class="filter-pill" onclick="filterByCategory('Peripherals', this)">Gear</button>
+            </div>
+
+            <!-- Dynamic Product Grid -->
+            <div class="product-grid" id="productGrid">
+                <!-- Products injected by js/home.js -->
+            </div>
+        </section>
+
+        <!-- ── CYBER DEALS BANNER ── -->
+        <section class="section" id="deals">
+            <div class="banner">
+                <div>
+                    <span class="overline">LIMITED TIME CYBER DEALS</span>
+                    <h2>Save up to <span>30% OFF</span> on Extreme Hardware.</h2>
+                    <p>Upgrade your gaming setup with RTX 40 series GPUs, Gen5 NVMe drives, and high-frequency DDR5 memory modules.</p>
+
+                    <div class="countdown-box">
+                        <div class="count-unit"><strong id="countHours">14</strong><span>HOURS</span></div>
+                        <div class="count-unit"><strong id="countMins">32</strong><span>MINUTES</span></div>
+                        <div class="count-unit"><strong id="countSecs">45</strong><span>SECONDS</span></div>
+                    </div>
+                </div>
+
+                <a href="#featured" class="primary-btn" style="padding: 16px 28px; font-size: 14px;">
+                    Claim Deals Now <span>→</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- ── WHY CHOOSE US ── -->
+        <section class="section" id="whyus">
+            <div class="section-head">
+                <div>
+                    <span class="overline">THE TECHZONE ADVANTAGE</span>
+                    <h2>Why builders <span>trust us.</span></h2>
+                </div>
+            </div>
+
+            <div class="why-us-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🚚</div>
+                    <h3>Islandwide Delivery</h3>
+                    <p>Fast, insured shipping directly to your doorstep across Sri Lanka with real-time tracking.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🛡️</div>
+                    <h3>Official Warranty</h3>
+                    <p>100% genuine products backed by official manufacturer warranties and hassle-free replacements.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚙️</div>
+                    <h3>Expert Assembly</h3>
+                    <p>Free custom PC build consultation and stress testing by our certified hardware technicians.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💳</div>
+                    <h3>Secure Payment</h3>
+                    <p>Flexible payment methods including credit cards, bank transfers, and easy installment plans.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── CUSTOMER REVIEWS ── -->
+        <section class="section" id="reviews">
+            <div class="section-head">
+                <div>
+                    <span class="overline">BUILDER REVIEWS</span>
+                    <h2>What our customers <span>say.</span></h2>
+                </div>
+            </div>
+
+            <div class="reviews-grid">
+                <div class="review-card">
+                    <div class="review-stars">★★★★★</div>
+                    <p>"Ordered an RTX 4070 Ti Super and Corsair DDR5 RAM. Delivery was super fast within 2 days to Kandy. Everything genuine!"</p>
+                    <div class="reviewer">
+                        <div class="avatar">K</div>
+                        <div class="reviewer-info">
+                            <strong>Kasun Perera</strong>
+                            <span>Verified Buyer · Gaming Enthusiast</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="review-card">
+                    <div class="review-stars">★★★★★</div>
+                    <p>"TechZone helped me pick the right AIO cooler and AM5 motherboard for my 7800X3D workstation. Customer service is top notch!"</p>
+                    <div class="reviewer">
+                        <div class="avatar">D</div>
+                        <div class="reviewer-info">
+                            <strong>Dilshan Fernando</strong>
+                            <span>Verified Buyer · 3D Animator</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="review-card">
+                    <div class="review-stars">★★★★★</div>
+                    <p>"Best prices for computer parts in Sri Lanka. The website is sleek and adding items to cart was smooth!"</p>
+                    <div class="reviewer">
+                        <div class="avatar">S</div>
+                        <div class="reviewer-info">
+                            <strong>Shehan Silva</strong>
+                            <span>Verified Buyer · PC Builder</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── NEWSLETTER ── -->
+        <section class="section">
+            <div class="newsletter-card">
+                <div>
+                    <h3>Stay Ahead in Tech</h3>
+                    <p>Subscribe for exclusive drop alerts, GPU restock notifications, and weekly hardware discounts.</p>
+                </div>
+                <form class="newsletter-form" onsubmit="event.preventDefault(); showToast('Subscribed to newsletter!');">
+                    <input type="email" class="newsletter-input" placeholder="Enter your email address..." required />
+                    <button type="submit" class="primary-btn">Subscribe</button>
+                </form>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ─── Modals ─── -->
+
+    <!-- Search Modal -->
+    <div class="modal-overlay" id="searchModal">
+        <div class="modal-box">
+            <button class="modal-close" onclick="toggleModal('searchModal', false)">✕</button>
+            <h3>Search PC Parts</h3>
+            <div class="search-input-wrap">
+                <input type="text" placeholder="Type processor, graphics card, RAM, SSD..." oninput="handleLiveSearch(this.value)" autofocus />
+            </div>
+            <div class="search-results" id="searchResults">
+                <p style="color: var(--muted); font-size: 12px; text-align: center;">Type to search hardware catalog...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart Modal Drawer -->
+    <div class="modal-overlay" id="cartModal">
+        <div class="modal-box">
+            <button class="modal-close" onclick="toggleModal('cartModal', false)">✕</button>
+            <h3>Shopping Cart</h3>
+            <div class="cart-items-list" id="cartList">
+                <!-- Cart items rendered by JS -->
+            </div>
+            <div class="cart-total-row">
+                <span>Subtotal:</span>
+                <strong id="cartTotal">Rs. 0</strong>
+            </div>
+            <button class="primary-btn" style="width: 100%;" onclick="alert('Proceeding to checkout summary!');">
+                Proceed to Checkout <span>→</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal-box">
+            <button class="modal-close" onclick="toggleModal('loginModal', false)">✕</button>
+            <h3>Account Login</h3>
+            <form onsubmit="event.preventDefault(); toggleModal('loginModal', false); showToast('Logged in successfully!');">
+                <div class="search-input-wrap" style="margin-bottom: 12px;">
+                    <input type="email" placeholder="Email Address" required />
+                </div>
+                <div class="search-input-wrap" style="margin-bottom: 20px;">
+                    <input type="password" placeholder="Password" required />
+                </div>
+                <button type="submit" class="primary-btn" style="width: 100%;">Sign In</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ─── Footer ─── -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-brand">
+                <a class="logo" href="index.html">
+                    <span class="logo-mark">T</span>
+                    <span>TECH<span>ZONE</span></span>
+                </a>
+                <p>Sri Lanka's premier destination for high-performance computer hardware, custom PC parts, gaming gear, and tech solutions.</p>
+            </div>
+
+            <div class="footer-col">
+                <h4>Categories</h4>
+                <ul>
+                    <li><a href="#shop">Processors (CPUs)</a></li>
+                    <li><a href="#shop">Graphics Cards (GPUs)</a></li>
+                    <li><a href="#shop">Memory (DDR4 / DDR5)</a></li>
+                    <li><a href="#shop">Storage (Gen4/Gen5 SSDs)</a></li>
+                    <li><a href="#shop">AIO Liquid Coolers</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#featured">Featured Parts</a></li>
+                    <li><a href="#deals">Cyber Deals</a></li>
+                    <li><a href="#whyus">Why TechZone</a></li>
+                    <li><a href="#reviews">Reviews</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Contact Us</h4>
+                <ul>
+                    <li>📞 +94 11 234 5678</li>
+                    <li>💬 WhatsApp Support</li>
+                    <li>✉️ sales@techzone.lk</li>
+                    <li>📍 TechZone Arcade, Colombo 03</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <div>© 2026 TechZone Arcade. All rights reserved.</div>
+            <div>Designed for PC Enthusiasts & Gamers.</div>
+        </div>
+    </footer>
+
+    <!-- Dedicated Home Page JavaScript -->
+    <script src="js/home.js"></script>
+</body>
+</html>
