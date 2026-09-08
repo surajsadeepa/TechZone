@@ -577,6 +577,19 @@ function showToast(message) {
 }
 
 // ── Search Handler ──
+// ── Smart Search Matcher (Word-prefix safe) ──
+function isProductSearchMatch(p, query) {
+    const q = query.trim().toLowerCase();
+    if (!q) return false;
+
+    const regex = new RegExp(`\\b${q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`, 'i');
+    
+    return regex.test(p.name) || 
+           regex.test(p.category) || 
+           regex.test(p.tag || '') || 
+           regex.test(p.specs);
+}
+
 function handleLiveSearch(query) {
     const resultsContainer = document.getElementById('searchResults');
     if (!resultsContainer) return;
@@ -586,11 +599,7 @@ function handleLiveSearch(query) {
         return;
     }
 
-    const matched = PRODUCTS.filter(p => 
-        p.name.toLowerCase().includes(query.toLowerCase()) || 
-        p.category.toLowerCase().includes(query.toLowerCase()) ||
-        p.specs.toLowerCase().includes(query.toLowerCase())
-    );
+    const matched = PRODUCTS.filter(p => isProductSearchMatch(p, query));
 
     if (matched.length === 0) {
         resultsContainer.innerHTML = `<p style="color: var(--muted); font-size: 12px; text-align: center;">No hardware components found.</p>`;
@@ -615,6 +624,15 @@ function toggleModal(modalId, show) {
     if (show) {
         modal.classList.add('active');
         if (modalId === 'cartModal') renderCartModal();
+        if (modalId === 'searchModal') {
+            setTimeout(() => {
+                const searchInp = modal.querySelector('input[type="text"]');
+                if (searchInp) {
+                    searchInp.focus();
+                    searchInp.select();
+                }
+            }, 50);
+        }
     } else {
         modal.classList.remove('active');
     }

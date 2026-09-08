@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="TechZone Product Catalog — Shop Processors, Graphics Cards, DDR5 RAM, Gen5 SSDs, Coolers, Power Supplies & Gaming Gear." />
+    <title>TechZone — Products & Hardware Catalog</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet" />
+
+    <!-- Dedicated Shop & Product Stylesheet -->
+    <link rel="stylesheet" href="css/products.css" />
+</head>
+<body>
+
+    <!-- ─── Announcement Bar ─── -->
+    <div class="announcement">
+        <span><i class="live-dot"></i> FREE ISLANDWIDE DELIVERY ON ORDERS OVER RS. 50,000</span>
+        <span>•</span>
+        <span>100% Genuine Products · Official Manufacturer Warranty</span>
+    </div>
+
+    <!-- ─── Header ─── -->
+    <header class="header">
+        <a class="logo" href="index.html" aria-label="TechZone Home">
+            <span class="logo-mark">T</span>
+            <span>TECH<span>ZONE</span></span>
+        </a>
+
+        <nav class="nav" aria-label="Main navigation" id="mainNav">
+            <a href="index.html">Home</a>
+            <a class="active" href="products.html">Shop</a>
+            <a href="index.html#shop">Categories</a>
+            <a href="index.html#deals">Cyber Deals</a>
+            <a href="index.html#whyus">Why Us</a>
+            <a href="index.html#reviews">Reviews</a>
+        </nav>
+
+        <div class="header-actions">
+            <button class="icon-btn" id="searchBtn" aria-label="Search Hardware Parts">⌕</button>
+            <button class="login-btn" id="loginBtn">Login</button>
+            <button class="cart-btn" id="cartBtn">
+                Cart <span id="cartCount">0</span>
+            </button>
+            <button class="menu-btn" id="menuBtn" aria-label="Toggle Mobile Menu">☰</button>
+        </div>
+    </header>
+
+    <!-- ─── Shop Hero Breadcrumbs Bar ─── -->
+    <div class="shop-hero-bar">
+        <div class="shop-hero-inner">
+            <div>
+                <div class="shop-breadcrumbs">
+                    <a href="index.html">Home</a> <span>/</span> <span>Shop Hardware</span>
+                </div>
+                <h1>Products <span>(Shop)</span></h1>
+            </div>
+            <p style="color: var(--muted); font-size: 13px; max-width: 420px;">
+                Explore flagship PC components, high-performance CPUs, next-gen GPUs, and extreme gaming peripherals with full manufacturer warranty.
+            </p>
+        </div>
+    </div>
+
+    <!-- ─── Main Shop Container (Sidebar + Content Grid) ─── -->
+    <div class="shop-container">
+
+        <!-- ── LEFT SIDEBAR (Wireframe Frame 2) ── -->
+        <aside class="shop-sidebar">
+
+            <!-- Category Filter Stack -->
+            <div class="sidebar-group">
+                <div class="sidebar-title">
+                    <span>CATEGORY FILTER</span>
+                </div>
+                <div class="sidebar-cat-list" id="sidebarCategories">
+                    <!-- Dynamic vertical category list rendered by js/products.js -->
+                </div>
+            </div>
+
+            <!-- Sort Dropdown -->
+            <div class="sidebar-group">
+                <div class="sidebar-title">
+                    <span>SORT</span>
+                </div>
+                <div class="sort-select-wrap">
+                    <select class="sort-select" id="sortSelect" onchange="handleSortChange(this.value)">
+                        <option value="featured">Featured Parts</option>
+                        <option value="price-low">Price: Low to High</option>
+                        <option value="price-high">Price: High to Low</option>
+                        <option value="rating">Highest Rated</option>
+                        <option value="name">Name: A to Z</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Quick Action Reset -->
+            <div class="sidebar-group">
+                <button class="secondary-btn" style="width: 100%; font-size: 12px; padding: 10px;" onclick="resetFilters()">
+                    Reset All Filters
+                </button>
+            </div>
+
+        </aside>
+
+        <!-- ── MAIN CONTENT AREA ── -->
+        <main class="shop-content">
+
+            <!-- Top Toolbar -->
+            <div class="shop-toolbar">
+                <div class="shop-toolbar-left">
+                    <span class="active-tag-badge" id="activeFilterTag">All Parts</span>
+                    <span class="result-count-text" id="resultCount">Loading products...</span>
+                </div>
+
+                <div class="shop-search-box">
+                    <span style="color: var(--muted); margin-right: 8px;">⌕</span>
+                    <input type="text" id="shopSearchInput" placeholder="Search CPU, GPU, RAM, SSD..." oninput="handleSearchInput(this.value)" autocomplete="off" />
+                    <div class="search-autocomplete-dropdown" id="searchAutocomplete"></div>
+                </div>
+            </div>
+
+            <!-- Products Grid -->
+            <div class="product-grid" id="productGrid">
+                <!-- Products rendered dynamically by js/products.js -->
+            </div>
+
+        </main>
+
+    </div>
+
+    <!-- ─────────────────────────────────────────────────────────────
+       FRAME 3: PRODUCT DETAIL MODAL VIEW
+       ───────────────────────────────────────────────────────────── -->
+    <div class="product-detail-modal-overlay" id="productDetailModal">
+        <div class="product-detail-card">
+            <button class="detail-close-btn" onclick="closeProductDetail()" aria-label="Close Product Detail">✕</button>
+
+            <!-- Top Section (2 Columns: Image + Detail Info) -->
+            <div class="detail-top-grid">
+                
+                <!-- Left: Large Product Image -->
+                <div class="detail-image-box">
+                    <img id="detailProductImage" src="images/hero_rtx5090.png" alt="Product Image" />
+                </div>
+
+                <!-- Right: Info, Price, Quantity & Add to Cart -->
+                <div class="detail-info-col">
+                    <span class="detail-category-tag" id="detailCategoryTag">FLAGSHIP RTX 50</span>
+                    <h1 id="detailProductName">NVIDIA GeForce RTX 5090 32GB Founders Edition</h1>
+                    
+                    <div class="detail-rating-row" id="detailRating">
+                        ★ 5.0 (94 customer reviews)
+                    </div>
+
+                    <div class="detail-price-box" id="detailProductPrice">
+                        Rs. 895,000
+                    </div>
+
+                    <div class="detail-stock-badge">
+                        <span class="detail-stock-dot"></span> In Stock · Available for Instant Islandwide Shipping
+                    </div>
+
+                    <!-- Quantity Control & Add to Cart -->
+                    <div class="detail-action-row">
+                        <div class="qty-control-box">
+                            <button class="qty-btn" onclick="changeDetailQty(-1)">-</button>
+                            <input type="text" class="qty-input" id="detailQtyInput" value="1" readonly />
+                            <button class="qty-btn" onclick="changeDetailQty(1)">+</button>
+                        </div>
+
+                        <button class="detail-add-btn" onclick="addActiveDetailToCart()">
+                            <span>Add to Cart</span> <span>→</span>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Bottom Section: SPEC SHEET (Key-Value Rows) -->
+            <div class="detail-spec-section">
+                <div class="spec-heading">
+                    <span>SPEC SHEET</span>
+                </div>
+
+                <div class="spec-sheet-grid" id="detailSpecSheet">
+                    <!-- Key : Value rows rendered dynamically by js/products.js -->
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ─── Header Modals ─── -->
+
+    <!-- Search Modal -->
+    <div class="modal-overlay" id="searchModal">
+        <div class="modal-box">
+            <button class="modal-close" onclick="toggleModal('searchModal', false)">✕</button>
+            <h3>Search Hardware Parts</h3>
+            <div class="search-input-wrap">
+                <input type="text" placeholder="Type processor, graphics card, RAM, SSD..." oninput="handleLiveSearch(this.value)" autofocus />
+            </div>
+            <div class="search-results" id="searchResults">
+                <p style="color: var(--muted); font-size: 12px; text-align: center;">Type to search hardware catalog...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart Modal Drawer -->
+    <div class="modal-overlay" id="cartModal">
+        <div class="modal-box">
+            <button class="modal-close" onclick="toggleModal('cartModal', false)">✕</button>
+            <h3>Shopping Cart</h3>
+            <div class="cart-items-list" id="cartList">
+                <!-- Cart items rendered by JS -->
+            </div>
+            <div class="cart-total-row">
+                <span>Subtotal:</span>
+                <strong id="cartTotal">Rs. 0</strong>
+            </div>
+            <button class="primary-btn" style="width: 100%;" onclick="alert('Proceeding to checkout summary!');">
+                Proceed to Checkout <span>→</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal-box">
+            <button class="modal-close" onclick="toggleModal('loginModal', false)">✕</button>
+            <h3>Account Login</h3>
+            <form onsubmit="event.preventDefault(); toggleModal('loginModal', false); showToast('Logged in successfully!');">
+                <div class="search-input-wrap" style="margin-bottom: 12px;">
+                    <input type="email" placeholder="Email Address" required />
+                </div>
+                <div class="search-input-wrap" style="margin-bottom: 20px;">
+                    <input type="password" placeholder="Password" required />
+                </div>
+                <button type="submit" class="primary-btn" style="width: 100%;">Sign In</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ─── Footer ─── -->
+    <footer id="contact" style="margin-top: 60px;">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <a class="logo" href="index.html">
+                    <span class="logo-mark">T</span>
+                    <span>TECH<span>ZONE</span></span>
+                </a>
+                <p>Sri Lanka's premier destination for high-performance computer hardware, custom PC parts, gaming gear, and tech solutions.</p>
+            </div>
+
+            <div class="footer-col">
+                <h4>Categories</h4>
+                <ul>
+                    <li><a href="products.html?category=CPU">Processors (CPUs)</a></li>
+                    <li><a href="products.html?category=GPU">Graphics Cards (GPUs)</a></li>
+                    <li><a href="products.html?category=RAM">Memory (DDR4 / DDR5)</a></li>
+                    <li><a href="products.html?category=Storage">Storage (Gen4/Gen5 SSDs)</a></li>
+                    <li><a href="products.html?category=Cooling">AIO Liquid Coolers</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="products.html">Shop Catalog</a></li>
+                    <li><a href="index.html#deals">Cyber Deals</a></li>
+                    <li><a href="index.html#whyus">Why TechZone</a></li>
+                    <li><a href="index.html#reviews">Reviews</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Contact Us</h4>
+                <ul>
+                    <li>📞 +94 11 234 5678</li>
+                    <li>💬 WhatsApp Support</li>
+                    <li>✉️ sales@techzone.lk</li>
+                    <li>📍 TechZone Arcade, Colombo 03</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <div>© 2026 TechZone Arcade. All rights reserved.</div>
+            <div>Designed for PC Enthusiasts & Gamers.</div>
+        </div>
+    </footer>
+
+    <!-- Dedicated Shop Page JavaScript Engine -->
+    <script src="js/products.js"></script>
+</body>
+</html>
