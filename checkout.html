@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Checkout — TechZone</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="css/home.css" />
+</head>
+<body>
+
+    <!-- ─── Announcement Bar ─── -->
+    <div class="announcement">
+        <span><i class="live-dot"></i> FREE ISLANDWIDE DELIVERY ON ORDERS OVER RS. 50,000</span>
+        <span>•</span>
+        <span>100% Genuine Products · Official Manufacturer Warranty</span>
+    </div>
+
+    <!-- ─── Header ─── -->
+    <header class="header">
+        <a class="logo" href="index.html" aria-label="TechZone Home">
+            <span class="logo-mark">T</span>
+            <span>TECH<span>ZONE</span></span>
+        </a>
+
+        <nav class="nav" aria-label="Main navigation" id="mainNav">
+            <a href="index.html">Home</a>
+            <a href="products.html">Shop</a>
+            <a class="active" href="cart.html">Cart</a>
+            <a href="index.html#shop">Categories</a>
+            <a href="index.html#deals">Cyber Deals</a>
+            <a href="index.html#whyus">Why Us</a>
+            <a href="index.html#reviews">Reviews</a>
+        </nav>
+
+        <div class="header-actions">
+            <button class="icon-btn" id="searchBtn" aria-label="Search Components">⌕</button>
+            <button class="login-btn" id="loginBtn">Login</button>
+            <button class="cart-btn" id="cartBtn" onclick="window.location.href='cart.html'">
+                Cart <span id="cartCount">0</span>
+            </button>
+            <button class="menu-btn" id="menuBtn" aria-label="Toggle Mobile Menu">☰</button>
+        </div>
+    </header>
+
+    <main class="page-container">
+        <!-- Breadcrumb Bar -->
+        <div class="breadcrumb-bar">
+            <a href="cart.html" class="breadcrumb-step completed">🛒 1. Shopping Cart</a>
+            <span class="breadcrumb-separator">➔</span>
+            <span class="breadcrumb-step active">💳 2. Checkout</span>
+            <span class="breadcrumb-separator">➔</span>
+            <span class="breadcrumb-step">✓ 3. Confirmation</span>
+        </div>
+
+        <div class="page-header-title">
+            <h1>Checkout & Shipping Details</h1>
+        </div>
+
+        <!-- Wireframe 5 Layout: Left Shipping & Payment Forms, Right Order Summary -->
+        <div class="wireframe-layout">
+            <!-- Left Form Area -->
+            <div>
+                <form id="checkoutForm" onsubmit="handlePlaceOrder(event);">
+                    <!-- SHIPPING DETAILS Section -->
+                    <div class="form-section">
+                        <h3>Shipping Details</h3>
+                        <div class="form-grid">
+                            <div class="form-group full">
+                                <label for="fullName">Full Name</label>
+                                <input type="text" id="fullName" class="form-input" placeholder="e.g. Suraj Sadeepa" required />
+                            </div>
+                            <div class="form-group full">
+                                <label for="address">Address</label>
+                                <input type="text" id="address" class="form-input" placeholder="e.g. 123 Tech Avenue, Suite 4" required />
+                            </div>
+                            <div class="form-group">
+                                <label for="city">City</label>
+                                <input type="text" id="city" class="form-input" placeholder="e.g. Colombo" required />
+                            </div>
+                            <div class="form-group">
+                                <label for="postalCode">Postal Code</label>
+                                <input type="text" id="postalCode" class="form-input" placeholder="e.g. 00300" required />
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PAYMENT (MOCK) Section -->
+                    <div class="form-section">
+                        <h3>Payment (Mock)</h3>
+                        <div class="form-grid">
+                            <div class="form-group full">
+                                <label for="cardNumber">Card Number</label>
+                                <input type="text" id="cardNumber" class="form-input" placeholder="4532 •••• •••• 8921" maxlength="19" required />
+                            </div>
+                            <div class="form-group">
+                                <label for="expiry">Expiry Date</label>
+                                <input type="text" id="expiry" class="form-input" placeholder="MM / YY" required />
+                            </div>
+                            <div class="form-group">
+                                <label for="cvv">CVV Code</label>
+                                <input type="text" id="cvv" class="form-input" placeholder="123" maxlength="4" required />
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="primary-btn" style="width: 100%; padding: 16px; font-size: 16px;">
+                        Place Order <span>→</span>
+                    </button>
+                </form>
+            </div>
+
+            <!-- Right Order Summary Sidebar -->
+            <div class="summary-card">
+                <h3>Order Summary</h3>
+                <div id="checkoutSummaryItems" style="margin-bottom: 16px;">
+                    <!-- Compact item list -->
+                </div>
+                <div class="summary-row">
+                    <span>Subtotal:</span>
+                    <span id="summarySubtotal">Rs. 0</span>
+                </div>
+                <div class="summary-row">
+                    <span>Shipping:</span>
+                    <span id="summaryShipping">Rs. 1,500</span>
+                </div>
+                <div class="summary-row total">
+                    <span>Total Amount:</span>
+                    <span id="summaryGrandTotal">Rs. 0</span>
+                </div>
+            </div>
+        </div>
+    <!-- ─── Modals ─── -->
+
+    <!-- Search Modal -->
+    <div class="modal-overlay" id="searchModal">
+        <div class="modal-box">
+            <button class="modal-close" onclick="toggleModal('searchModal', false)">✕</button>
+            <h3>Search PC Parts</h3>
+            <div class="search-input-wrap">
+                <input type="text" placeholder="Type processor, graphics card, RAM, SSD..." oninput="handleLiveSearch(this.value)" autofocus />
+            </div>
+            <div class="search-results" id="searchResults">
+                <p style="color: var(--muted); font-size: 12px; text-align: center;">Type to search hardware catalog...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart Modal Drawer -->
+    <div class="modal-overlay" id="cartModal">
+        <div class="modal-box">
+            <button class="modal-close" onclick="toggleModal('cartModal', false)">✕</button>
+            <h3>Shopping Cart</h3>
+            <div class="cart-items-list" id="cartList">
+                <!-- Cart items rendered by JS -->
+            </div>
+            <div class="cart-total-row">
+                <span>Subtotal:</span>
+                <strong id="cartTotal">Rs. 0</strong>
+            </div>
+            <button class="primary-btn" style="width: 100%;" onclick="window.location.href='cart.html';">
+                View Cart Page <span>→</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal-box">
+            <button class="modal-close" onclick="toggleModal('loginModal', false)">✕</button>
+            <h3>Account Login</h3>
+            <form onsubmit="event.preventDefault(); toggleModal('loginModal', false); showToast('Logged in successfully!');">
+                <div class="search-input-wrap" style="margin-bottom: 12px;">
+                    <input type="email" placeholder="Email Address" required />
+                </div>
+                <div class="search-input-wrap" style="margin-bottom: 20px;">
+                    <input type="password" placeholder="Password" required />
+                </div>
+                <button type="submit" class="primary-btn" style="width: 100%;">Sign In</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/cart_page.js"></script>
+</body>
+</html>

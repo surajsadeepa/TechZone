@@ -280,9 +280,22 @@ const PRODUCTS = [
     }
 ];
 
-// ── State Management ──
-let cart = JSON.parse(localStorage.getItem('techzoneCart')) || [];
+// ── Step 3: Session Storage & State Persistence ──
+// Retrieve saved cart array from localStorage on page load so items persist after page refresh
+let cart = JSON.parse(localStorage.getItem('cart')) || JSON.parse(localStorage.getItem('techzoneCart')) || [];
 let activeCategory = 'ALL';
+
+// ── Cart Functions (PHP & SQL Backend Integration) ──
+function updateCartCount() {
+    const countSpan = document.getElementById('cartCount');
+    if (countSpan) {
+        const totalItems = cart.reduce((sum, i) => sum + i.qty, 0);
+        countSpan.textContent = totalItems;
+    }
+    // Step 3: Every time the cart changes, convert the cart array into a JSON string and save it to localStorage
+    localStorage.setItem('cart', JSON.stringify(cart));
+    localStorage.setItem('techzoneCart', JSON.stringify(cart));
+}
 
 // ── Model-Specific Brand Photo Resolver ──
 function getProductVisualHTML(item) {
@@ -483,42 +496,100 @@ function filterByCategory(cat, btn) {
     renderProducts(cat);
 }
 
-// ── Cart Functions ──
-function updateCartCount() {
-    const countSpan = document.getElementById('cartCount');
-    if (countSpan) {
-        const totalItems = cart.reduce((sum, i) => sum + i.qty, 0);
-        countSpan.textContent = totalItems;
-    }
-    localStorage.setItem('techzoneCart', JSON.stringify(cart));
-}
+// ── Cart Functions (PHP & SQL Backend Integration) ──
 
+// Step 1 - Add to Cart Logic: Capture Event, Extract Data (ProductID, Title, Price, Image) & Send to PHP/SQL Backend
 function addToCart(productId) {
     const product = PRODUCTS.find(p => p.id === productId);
     if (!product) return;
 
+    // 1. Extract required identifiers
+    const payload = {
+        product_id: product.id,
+        title: product.name,
+        price: product.price,
+        image: product.image,
+        quantity: 1
+    };
+
+    // 2. Local State Optimistic Update
     const existing = cart.find(item => item.id === productId);
     if (existing) {
         existing.qty += 1;
     } else {
         cart.push({ ...product, qty: 1 });
     }
-
     updateCartCount();
     showToast(`Added ${product.name} to cart!`);
+
+    // 3. Post data to PHP & SQL Backend
+    fetch('api/add_to_cart.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === 'success' && data.cartCount !== undefined) {
+            // Update badge from SQL DB count
+            const countSpan = document.getElementById('cartCount');
+            if (countSpan) countSpan.textContent = data.cartCount;
+        }
+    })
+    .catch(err => {
+        console.log('PHP backend sync info (running in local mode):', err.message);
+    });
 }
 
+// Step 2 - Remove Item Feature: Use JavaScript filter() array method to remove product ID from cart state
+function removeFromCart(productId) {
+    const itemToRemove = cart.find(i => i.id === productId);
+    
+    // Use Array.filter() to remove specific product ID from cart array
+    cart = cart.filter(item => item.id !== productId);
+
+    updateCartCount();
+    renderCartModal();
+    if (itemToRemove) {
+        showToast(`Removed ${itemToRemove.name || itemToRemove.title} from cart.`);
+    }
+
+    // Sync item deletion to PHP & SQL Backend API
+    fetch('api/remove_from_cart.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ product_id: productId })
+    }).catch(err => console.log('Local removal sync:', err));
+}
+
+// Step 2 - Quantity Up/Down Controls with Edge Case Rule (Qty < 1 automatically removes item)
 function updateQty(productId, delta) {
     const item = cart.find(i => i.id === productId);
     if (!item) return;
 
     item.qty += delta;
+
+    // Edge Case Rule: If quantity drops below 1, automatically remove item using filter()
     if (item.qty <= 0) {
-        cart = cart.filter(i => i.id !== productId);
+        removeFromCart(productId);
+        return;
     }
 
     updateCartCount();
     renderCartModal();
+
+    // Sync quantity update to PHP & SQL Backend
+    fetch('api/update_cart.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ product_id: productId, delta: delta })
+    }).catch(() => {});
 }
 
 function renderCartModal() {
@@ -526,6 +597,24 @@ function renderCartModal() {
     const totalEl = document.getElementById('cartTotal');
     if (!list || !totalEl) return;
 
+    // Attempt to fetch fresh cart state from PHP & SQL backend
+    fetch('api/get_cart.php')
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === 'success' && Array.isArray(data.items)) {
+                cart = data.items;
+                updateCartCount();
+            }
+            displayCartItemsHTML(list, totalEl);
+        })
+        .catch(() => {
+            // Fallback to local array
+            displayCartItemsHTML(list, totalEl);
+        });
+}
+
+// Step 2 - View Cart Drawer & Live Total Calculation (Subtotal = Price x Quantity)
+function displayCartItemsHTML(list, totalEl) {
     if (cart.length === 0) {
         list.innerHTML = `<div style="text-align: center; color: var(--muted); padding: 30px;">Your cart is empty</div>`;
         totalEl.textContent = 'Rs. 0';
@@ -534,23 +623,26 @@ function renderCartModal() {
 
     let grandTotal = 0;
     list.innerHTML = cart.map(item => {
-        const itemTotal = item.price * item.qty;
+        const itemName = item.name || item.title;
+        const itemTotal = item.price * item.qty; // Live Subtotal Calculation (Price x Quantity)
         grandTotal += itemTotal;
         return `
             <div class="cart-item">
                 <div class="cart-item-info">
-                    <h5>${item.name}</h5>
-                    <p>${formatPrice(item.price)} × ${item.qty}</p>
+                    <h5>${itemName}</h5>
+                    <p>${formatPrice(item.price)} × ${item.qty} = <strong>${formatPrice(itemTotal)}</strong></p>
                 </div>
                 <div class="cart-item-controls">
                     <button class="cart-qty-btn" onclick="updateQty(${item.id}, -1)">-</button>
                     <span style="font-weight: 700; font-size: 13px;">${item.qty}</span>
                     <button class="cart-qty-btn" onclick="updateQty(${item.id}, 1)">+</button>
+                    <button class="remove-item-btn" onclick="removeFromCart(${item.id})" title="Remove Item">🗑️</button>
                 </div>
             </div>
         `;
     }).join('');
 
+    // Update Live Grand Total display
     totalEl.textContent = formatPrice(grandTotal);
 }
 

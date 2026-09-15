@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Order Confirmation — TechZone</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="css/home.css" />
+</head>
+<body>
+
+    <!-- ─── Announcement Bar ─── -->
+    <div class="announcement">
+        <span><i class="live-dot"></i> FREE ISLANDWIDE DELIVERY ON ORDERS OVER RS. 50,000</span>
+        <span>•</span>
+        <span>100% Genuine Products · Official Manufacturer Warranty</span>
+    </div>
+
+    <!-- ─── Header ─── -->
+    <header class="header">
+        <a class="logo" href="index.html" aria-label="TechZone Home">
+            <span class="logo-mark">T</span>
+            <span>TECH<span>ZONE</span></span>
+        </a>
+
+        <nav class="nav" aria-label="Main navigation" id="mainNav">
+            <a href="index.html">Home</a>
+            <a href="products.html">Shop</a>
+            <a href="cart.html">Cart</a>
+            <a href="index.html#shop">Categories</a>
+            <a href="index.html#deals">Cyber Deals</a>
+            <a href="index.html#whyus">Why Us</a>
+            <a href="index.html#reviews">Reviews</a>
+        </nav>
+
+        <div class="header-actions">
+            <button class="icon-btn" id="searchBtn" aria-label="Search Components">⌕</button>
+            <button class="login-btn" id="loginBtn">Login</button>
+            <button class="cart-btn" id="cartBtn" onclick="window.location.href='cart.html'">
+                Cart <span id="cartCount">0</span>
+            </button>
+            <button class="menu-btn" id="menuBtn" aria-label="Toggle Mobile Menu">☰</button>
+        </div>
+    </header>
+
+    <main class="page-container">
+        <!-- Breadcrumb Bar -->
+        <div class="breadcrumb-bar" style="max-width: 650px; margin-left: auto; margin-right: auto;">
+            <span class="breadcrumb-step completed">🛒 1. Cart</span>
+            <span class="breadcrumb-separator">➔</span>
+            <span class="breadcrumb-step completed">💳 2. Checkout</span>
+            <span class="breadcrumb-separator">➔</span>
+            <span class="breadcrumb-step active">✓ 3. Confirmation</span>
+        </div>
+
+        <!-- Wireframe 6 Layout: Order Confirmation Receipt Card -->
+        <div class="confirmation-card">
+            <div class="success-badge-icon">✓</div>
+            <h2>Order Placed Successfully!</h2>
+            <p>Thank you for shopping at TechZone. Your hardware components are being prepared for dispatch.</p>
+
+            <div class="order-details-box">
+                <div class="order-detail-line">
+                    <span>Order Reference Number:</span>
+                    <strong id="confirmOrderNo">#TZ-849210</strong>
+                </div>
+                <div class="order-detail-line">
+                    <span>Order Status:</span>
+                    <strong style="color: #10b981;" id="confirmStatus">Confirmed & Processing</strong>
+                </div>
+                <div class="order-detail-line">
+                    <span>Customer Name:</span>
+                    <strong id="confirmName">Customer</strong>
+                </div>
+                <div class="order-detail-line">
+                    <span>Total Amount Paid:</span>
+                    <strong style="color: var(--cyan);" id="confirmTotal">Rs. 0</strong>
+                </div>
+                <div class="order-detail-line">
+                    <span>Estimated Islandwide Delivery:</span>
+                    <strong id="confirmDelivery">2 - 3 Business Days</strong>
+                </div>
+            </div>
+
+            <a href="products.html" class="primary-btn" style="display: inline-block; padding: 14px 32px; text-decoration: none;">
+                Continue Shopping <span>→</span>
+            </a>
+        </div>
+    <!-- ─── Modals ─── -->
+
+    <!-- Search Modal -->
+    <div class="modal-overlay" id="searchModal">
+        <div class="modal-box">
+            <button class="modal-close" onclick="toggleModal('searchModal', false)">✕</button>
+            <h3>Search PC Parts</h3>
+            <div class="search-input-wrap">
+                <input type="text" placeholder="Type processor, graphics card, RAM, SSD..." oninput="handleLiveSearch(this.value)" autofocus />
+            </div>
+            <div class="search-results" id="searchResults">
+                <p style="color: var(--muted); font-size: 12px; text-align: center;">Type to search hardware catalog...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart Modal Drawer -->
+    <div class="modal-overlay" id="cartModal">
+        <div class="modal-box">
+            <button class="modal-close" onclick="toggleModal('cartModal', false)">✕</button>
+            <h3>Shopping Cart</h3>
+            <div class="cart-items-list" id="cartList">
+                <!-- Cart items rendered by JS -->
+            </div>
+            <div class="cart-total-row">
+                <span>Subtotal:</span>
+                <strong id="cartTotal">Rs. 0</strong>
+            </div>
+            <button class="primary-btn" style="width: 100%;" onclick="window.location.href='cart.html';">
+                View Cart Page <span>→</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal-box">
+            <button class="modal-close" onclick="toggleModal('loginModal', false)">✕</button>
+            <h3>Account Login</h3>
+            <form onsubmit="event.preventDefault(); toggleModal('loginModal', false); showToast('Logged in successfully!');">
+                <div class="search-input-wrap" style="margin-bottom: 12px;">
+                    <input type="email" placeholder="Email Address" required />
+                </div>
+                <div class="search-input-wrap" style="margin-bottom: 20px;">
+                    <input type="password" placeholder="Password" required />
+                </div>
+                <button type="submit" class="primary-btn" style="width: 100%;">Sign In</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/cart_page.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const lastOrder = JSON.parse(localStorage.getItem('techzoneLastOrder')) || {};
+            if (lastOrder.order_number) {
+                document.getElementById('confirmOrderNo').textContent = lastOrder.order_number;
+                document.getElementById('confirmStatus').textContent = lastOrder.status || 'Confirmed & Processing';
+                document.getElementById('confirmName').textContent = lastOrder.customer_name || 'Customer';
+                document.getElementById('confirmTotal').textContent = 'Rs. ' + Number(lastOrder.total_amount).toLocaleString('en-US');
+                document.getElementById('confirmDelivery').textContent = lastOrder.delivery_estimate || '2 - 3 Business Days';
+            }
+            // Clear cart count badge on confirmation
+            const countSpan = document.getElementById('cartCount');
+            if (countSpan) countSpan.textContent = '0';
+        });
+    </script>
+</body>
+</html>
