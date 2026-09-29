@@ -20,6 +20,32 @@ function updateCartCount() {
     localStorage.setItem('techzoneCart', JSON.stringify(cart));
 }
 
+
+async function syncAuthenticatedCart() {
+    try {
+        const authRes = await fetch('api/me.php', { cache: 'no-store' });
+        const authData = await authRes.json();
+        if (!authData.authenticated) return false;
+
+        const cartRes = await fetch('api/get_cart.php', { cache: 'no-store' });
+        const cartData = await cartRes.json();
+        if (cartRes.ok && cartData.status === 'success') {
+            cart = (cartData.items || []).map(item => ({
+                id: Number(item.product_id),
+                product_id: Number(item.product_id),
+                name: item.name || item.title,
+                title: item.title || item.name,
+                price: Number(item.price),
+                image: item.image,
+                qty: Number(item.qty || item.quantity || 1)
+            }));
+            updateCartCount();
+            return true;
+        }
+    } catch (e) {}
+    return false;
+}
+
 // ── Render Wireframe 4: Cart Page Layout ──
 function renderCartPage() {
     const listContainer = document.getElementById('cartPageList');
@@ -183,19 +209,8 @@ function handlePlaceOrder(event) {
         // Redirect to Wireframe 6 Order Confirmation Page
         window.location.href = 'confirmation.html';
     })
-    .catch(err => {
-        // Fallback for purely static frontend execution
-        const orderData = {
-            order_number: 'TZ-' + Math.floor(100000 + Math.random() * 900000),
-            customer_name: payload.customer_name,
-            total_amount: cart.reduce((sum, i) => sum + i.price * i.qty, 0) + SHIPPING_FEE,
-            delivery_estimate: '2 - 3 Business Days',
-            status: 'Confirmed'
-        };
-        localStorage.setItem('techzoneLastOrder', JSON.stringify(orderData));
-        cart = [];
-        updateCartCount();
-        window.location.href = 'confirmation.html';
+    .catch(() => {
+        alert('Unable to place the order. Please make sure XAMPP Apache/MySQL are running and try again.');
     });
 }
 
@@ -289,7 +304,8 @@ function showToast(message) {
     alert(message);
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    await syncAuthenticatedCart();
     updateCartCount();
     renderCartPage();
     renderCheckoutSummary();

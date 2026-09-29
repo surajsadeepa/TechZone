@@ -1,8 +1,7 @@
 <?php
 // api/add_to_cart.php - Step 1: Add to Cart Backend Handler
-session_start();
+require_once __DIR__ . '/bootstrap.php';
 header('Content-Type: application/json');
-
 require_once __DIR__ . '/../config/db.php';
 
 // Check if request method is POST
@@ -37,44 +36,32 @@ if ($productId <= 0 || empty($title) || $price <= 0) {
     exit;
 }
 
-// Use current session ID to track cart items for the user
+$user = current_user();
+$userId = $user ? (int)$user['user_id'] : null;
 $sessionId = session_id();
 
 try {
-    // 3. SQL Logic: Check if item already exists in cart for this session
-    $stmt = $pdo->prepare("SELECT id, quantity FROM cart WHERE user_session_id = ? AND product_id = ?");
-    $stmt->execute([$sessionId, $productId]);
-    $existing = $stmt->fetch();
-
-    if ($existing) {
-        // Product exists -> Update quantity
-        $newQty = $existing['quantity'] + $qty;
-        $updateStmt = $pdo->prepare("UPDATE cart SET quantity = ? WHERE id = ?");
-        $updateStmt->execute([$newQty, $existing['id']]);
+    // Week 5: check existing product first; if it exists, increase quantity.
+    if ($userId) {
+        $stmt = $pdo->prepare('SELECT id, quantity FROM cart WHERE user_id = ? AND product_id = ?');
+        $stmt->execute([$userId, $productId]);
     } else {
-        // Product doesn't exist -> Insert into SQL table
-        $insertStmt = $pdo->prepare("INSERT INTO cart (user_session_id, product_id, title, price, image, quantity) VALUES (?, ?, ?, ?, ?, ?)");
-        $insertStmt->execute([$sessionId, $productId, $title, $price, $image, $qty]);
+        $stmt = $pdo->prepare('SELECT id, quantity FROM cart WHERE user_id IS NULL AND user_session_id = ? AND product_id = ?');
+        $stmt->execute([$sessionId, $productId]);
     }
-
-    // Calculate total count in user's cart
-    $countStmt = $pdo->prepare("SELECT SUM(quantity) as total_items FROM cart WHERE user_session_id = ?");
-    $countStmt->execute([$sessionId]);
-    $totalResult = $countStmt->fetch();
-    $totalCount = intval($totalResult['total_items'] ?? 0);
-
-    echo json_encode([
-        'status' => 'success',
-        'message' => "Successfully added '{$title}' to cart in SQL database",
-        'cartCount' => $totalCount,
-        'item' => [
-            'product_id' => $productId,
-            'title' => $title,
-            'price' => $price,
-            'image' => $image,
-            'quantity' => $qty
-        ]
-    ]);
+    $existing = $stmt->fetch();
+    if ($existing) {
+        $newQty = $existing['quantity'] + $qty;
+        $updateStmt = $pdo->prepare('UPDATE cart SET quantity = ?, title = ?, price = ?, image = ? WHERE id = ?');
+        $updateStmt->execute([$newQty,$title,$price,$image,$existing['id']]);
+    } else {
+        $insertStmt = $pdo->prepare('INSERT INTO cart (user_session_id,user_id,product_id,title,price,image,quantity) VALUES (?,?,?,?,?,?,?)');
+        $insertStmt->execute([$sessionId,$userId,$productId,$title,$price,$image,$qty]);
+    }
+    if ($userId) { $countStmt=$pdo->prepare('SELECT COALESCE(SUM(quantity),0) FROM cart WHERE user_id=?'); $countStmt->execute([$userId]); }
+    else { $countStmt=$pdo->prepare('SELECT COALESCE(SUM(quantity),0) FROM cart WHERE user_id IS NULL AND user_session_id=?'); $countStmt->execute([$sessionId]); }
+    $totalCount=(int)$countStmt->fetchColumn();
+    echo json_encode(['status'=>'success','message'=>"Successfully added '{$title}' to cart",'cartCount'=>$totalCount,'item'=>['product_id'=>$productId,'title'=>$title,'price'=>$price,'image'=>$image,'quantity'=>$qty]]);
 } catch (PDOException $e) {
     http_response_code(500);
     echo json_encode([

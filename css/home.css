@@ -239,6 +239,87 @@ a {
     border-color: var(--line);
     background: var(--soft);
 }
+
+/* ── Practical Milestone 2: User Navbar Widget & Dropdown ── */
+.user-nav-widget {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 10px 4px 6px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 30px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    position: relative;
+    cursor: pointer;
+}
+.user-nav-widget:hover {
+    border-color: var(--accent-light);
+    box-shadow: 0 0 12px var(--accent-glow);
+}
+.user-avatar-img {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1.5px solid var(--accent-light);
+}
+.user-nav-name {
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+    max-width: 110px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.user-profile-menu {
+    display: none;
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    width: 190px;
+    background: #14141a;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+    padding: 8px 0;
+    z-index: 100;
+}
+.user-profile-menu.active {
+    display: block;
+}
+.user-profile-menu a,
+.user-profile-menu button {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 10px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--muted);
+    background: transparent;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+}
+.user-profile-menu a:hover,
+.user-profile-menu button:hover {
+    background: var(--soft);
+    color: #fff;
+}
+.user-profile-menu button.logout-item {
+    color: #fca5a5;
+    border-top: 1px solid var(--line);
+    margin-top: 4px;
+    padding-top: 10px;
+}
+.user-profile-menu button.logout-item:hover {
+    background: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+}
 .cart-btn {
     background: linear-gradient(135deg, var(--accent), #6d28d9);
     color: #fff;

@@ -1,8 +1,7 @@
 <?php
 // api/place_order.php - Process Checkout & Create Order in SQL Database
-session_start();
+require_once __DIR__ . '/bootstrap.php';
 header('Content-Type: application/json');
-
 require_once __DIR__ . '/../config/db.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -28,6 +27,8 @@ if (empty($customerName) || empty($address) || empty($city)) {
 }
 
 $sessionId = session_id();
+$user = current_user();
+$userId = $user ? (int)$user['user_id'] : null;
 
 try {
     $pdo->beginTransaction();
@@ -42,8 +43,8 @@ try {
     $orderNumber = 'TZ-' . strtoupper(substr(md5(uniqid(mt_rand(), true)), 0, 6));
 
     // Insert Order into SQL Database
-    $stmt = $pdo->prepare("INSERT INTO orders (order_number, user_session_id, customer_name, address, city, postal_code, card_number, total_amount, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'Confirmed')");
-    $stmt->execute([$orderNumber, $sessionId, $customerName, $address, $city, $postalCode, substr($cardNumber, -4), $totalAmount]);
+    $stmt = $pdo->prepare("INSERT INTO orders (order_number, user_session_id, user_id, customer_name, address, city, postal_code, card_number, total_amount, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'Confirmed')");
+    $stmt->execute([$orderNumber, $sessionId, $userId, $customerName, $address, $city, $postalCode, substr($cardNumber, -4), $totalAmount]);
     $orderId = $pdo->lastInsertId();
 
     // Insert Order Line Items
@@ -58,8 +59,8 @@ try {
     }
 
     // Clear user cart in SQL Database
-    $clearStmt = $pdo->prepare("DELETE FROM cart WHERE user_session_id = ?");
-    $clearStmt->execute([$sessionId]);
+    if ($userId) { $clearStmt = $pdo->prepare('DELETE FROM cart WHERE user_id = ?'); $clearStmt->execute([$userId]); }
+    else { $clearStmt = $pdo->prepare('DELETE FROM cart WHERE user_id IS NULL AND user_session_id = ?'); $clearStmt->execute([$sessionId]); }
 
     $pdo->commit();
 

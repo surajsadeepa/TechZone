@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login — TechZone</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="css/home.css" />
+    <style>
+        .auth-container {
+            max-width: 440px;
+            margin: 60px auto 100px;
+            padding: 40px 32px;
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            text-align: center;
+        }
+        .auth-container h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 28px;
+            color: #fff;
+            margin-bottom: 24px;
+            letter-spacing: -0.5px;
+        }
+        .auth-form-group {
+            margin-bottom: 18px;
+            text-align: left;
+        }
+        .auth-form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--muted);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .auth-input {
+            width: 100%;
+            padding: 14px 16px;
+            background: #16161c;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+        .auth-input:focus {
+            outline: none;
+            border-color: var(--accent-light);
+            box-shadow: 0 0 10px var(--accent-glow);
+        }
+        .auth-submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--accent), #6366f1);
+            color: #fff;
+            font-weight: 700;
+            font-size: 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+        .auth-submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px var(--accent-glow);
+        }
+        .auth-footer-link {
+            margin-top: 24px;
+            font-size: 13px;
+            color: var(--muted);
+        }
+        .auth-footer-link a {
+            color: var(--accent-light);
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+        .auth-footer-link a:hover {
+            color: #fff;
+            text-decoration: underline;
+        }
+        .auth-alert {
+            display: none;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        .auth-alert.error {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #fca5a5;
+        }
+        .auth-alert.success {
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #6ee7b7;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ─── Announcement Bar ─── -->
+    <div class="announcement">
+        <span><i class="live-dot"></i> FREE ISLANDWIDE DELIVERY ON ORDERS OVER RS. 50,000</span>
+        <span>•</span>
+        <span>100% Genuine Products · Official Manufacturer Warranty</span>
+    </div>
+
+    <!-- ─── Header (Wireframe 7: TechZone / Home Shop) ─── -->
+    <header class="header">
+        <a class="logo" href="index.html" aria-label="TechZone Home">
+            <span class="logo-mark">T</span>
+            <span>TECH<span>ZONE</span></span>
+        </a>
+
+        <nav class="nav" aria-label="Main navigation" id="mainNav">
+            <a class="" href="index.html">Home</a>
+            <a class="" href="products.html">Shop</a>
+            <a href="about.html">About</a>
+            <a href="contact.html">Contact</a>
+        </nav>
+
+        <div class="header-actions">
+            <button class="icon-btn" id="searchBtn" aria-label="Search Components">⌕</button>
+            <button class="login-btn" id="loginBtn">Login</button>
+            <button class="cart-btn" id="cartBtn" onclick="window.location.href='cart.html'">
+                Cart <span id="cartCount">0</span>
+            </button>
+            <button class="menu-btn" id="menuBtn" aria-label="Toggle Mobile Menu">☰</button>
+        </div>
+    </header>
+
+    <!-- ─── Wireframe 7 Layout: Login Box ─── -->
+    <main>
+        <div class="auth-container">
+            <h1>Log in</h1>
+            
+            <div id="loginAlert" class="auth-alert"></div>
+
+            <form id="loginForm" onsubmit="handleLoginSubmit(event);">
+                <div class="auth-form-group">
+                    <label for="loginEmail">Email Address</label>
+                    <input type="email" id="loginEmail" class="auth-input" placeholder="e.g. suraj@techzone.lk" required />
+                </div>
+
+                <div class="auth-form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" class="auth-input" placeholder="••••••••" required />
+                </div>
+
+                <button type="submit" class="auth-submit-btn" id="loginSubmitBtn">Log in</button>
+            </form>
+
+            <div class="auth-footer-link">
+                No account? <a href="register.html">Register ➔</a>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/cart_page.js"></script>
+    <script src="js/auth.js"></script>
+</body>
+</html>

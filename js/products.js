@@ -766,6 +766,7 @@ function resetFilters() {
 
 // ── Frame 3: Product Detail Modal Engine ──
 function openProductDetail(productId) {
+    if (!document.getElementById('productDetailModal')) { window.location.href = `product.html?id=${productId}`; return; }
     const product = PRODUCTS.find(p => p.id === productId);
     if (!product) return;
 
