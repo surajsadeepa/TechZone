@@ -165,53 +165,93 @@ function removeItem(productId) {
     }).catch(() => {});
 }
 
-// ── Wireframe 5: Checkout Order Submission to PHP API ──
-function handlePlaceOrder(event) {
+// ── Week 07: PayHere Sandbox Checkout ──
+async function handlePayHereCheckout(event) {
     event.preventDefault();
 
+    const errorEl = document.getElementById('paymentError');
+    const button = document.getElementById('payNowBtn');
+    if (errorEl) { errorEl.style.display = 'none'; errorEl.textContent = ''; }
+
     if (cart.length === 0) {
-        alert('Your cart is empty. Please add items to checkout.');
+        if (errorEl) { errorEl.style.display = 'block'; errorEl.textContent = 'Your cart is empty. Please add products before checkout.'; }
         return;
     }
 
     const payload = {
-        customer_name: document.getElementById('fullName')?.value || 'Valued Customer',
-        address: document.getElementById('address')?.value || '',
-        city: document.getElementById('city')?.value || '',
-        postal_code: document.getElementById('postalCode')?.value || '',
-        card_number: document.getElementById('cardNumber')?.value || '',
-        items: cart
+        full_name: document.getElementById('fullName')?.value.trim() || '',
+        email: document.getElementById('email')?.value.trim() || '',
+        phone: document.getElementById('phone')?.value.trim() || '',
+        address: document.getElementById('address')?.value.trim() || '',
+        city: document.getElementById('city')?.value.trim() || '',
+        postal_code: document.getElementById('postalCode')?.value.trim() || '',
+        country: document.getElementById('country')?.value.trim() || 'Sri Lanka'
     };
 
-    // Post order to PHP SQL Backend endpoint api/place_order.php
-    fetch('api/place_order.php', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-    })
-    .then(res => res.json())
-    .then(data => {
-        const orderData = data.order || {
-            order_number: 'TZ-' + Math.floor(100000 + Math.random() * 900000),
-            customer_name: payload.customer_name,
-            total_amount: cart.reduce((sum, i) => sum + i.price * i.qty, 0) + SHIPPING_FEE,
-            delivery_estimate: '2 - 3 Business Days',
-            status: 'Confirmed'
+    if (button) {
+        button.disabled = true;
+        button.innerHTML = 'Preparing Secure Payment...';
+    }
+
+    try {
+        const response = await fetch('api/payhere_prepare.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        const data = await response.json();
+
+        if (!response.ok || data.status !== 'success') {
+            throw new Error(data.message || 'Unable to prepare the PayHere payment.');
+        }
+
+        // Build the PayHere POST form only after the server has generated the hash.
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = 'https://sandbox.payhere.lk/pay/checkout';
+        form.style.display = 'none';
+
+        const fields = {
+            merchant_id: data.merchant_id,
+            return_url: data.return_url,
+            cancel_url: data.cancel_url,
+            notify_url: data.notify_url,
+            first_name: data.first_name,
+            last_name: data.last_name,
+            email: data.email,
+            phone: data.phone,
+            address: data.address,
+            city: data.city,
+            country: data.country,
+            order_id: data.order_id,
+            items: data.items,
+            currency: data.currency,
+            amount: data.amount,
+            hash: data.hash
         };
 
-        // Save order for Wireframe 6 Confirmation Page
-        localStorage.setItem('techzoneLastOrder', JSON.stringify(orderData));
+        Object.entries(fields).forEach(([name, value]) => {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = name;
+            input.value = value;
+            form.appendChild(input);
+        });
 
-        // Clear local cart
-        cart = [];
-        updateCartCount();
-
-        // Redirect to Wireframe 6 Order Confirmation Page
-        window.location.href = 'confirmation.html';
-    })
-    .catch(() => {
-        alert('Unable to place the order. Please make sure XAMPP Apache/MySQL are running and try again.');
-    });
+        document.body.appendChild(form);
+        form.submit();
+    } catch (error) {
+        if (errorEl) {
+            errorEl.style.display = 'block';
+            errorEl.textContent = error.message;
+        } else {
+            alert(error.message);
+        }
+        if (button) {
+            button.disabled = false;
+            button.innerHTML = 'Pay Now with PayHere <span>→</span>';
+        }
+    }
 }
 
 // ── Header & Modals Support Engine ──

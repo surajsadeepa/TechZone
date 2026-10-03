@@ -140,18 +140,34 @@
     <script src="js/cart_page.js"></script>
     <script src="js/auth.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const lastOrder = JSON.parse(localStorage.getItem('techzoneLastOrder')) || {};
-            if (lastOrder.order_number) {
-                document.getElementById('confirmOrderNo').textContent = lastOrder.order_number;
-                document.getElementById('confirmStatus').textContent = lastOrder.status || 'Confirmed & Processing';
-                document.getElementById('confirmName').textContent = lastOrder.customer_name || 'Customer';
-                document.getElementById('confirmTotal').textContent = 'Rs. ' + Number(lastOrder.total_amount).toLocaleString('en-US');
-                document.getElementById('confirmDelivery').textContent = lastOrder.delivery_estimate || '2 - 3 Business Days';
+        document.addEventListener('DOMContentLoaded', async () => {
+            const params = new URLSearchParams(window.location.search);
+            const orderId = params.get('order_id');
+            const cancelled = params.get('payment_cancelled') === '1';
+            const statusEl = document.getElementById('confirmStatus');
+
+            if (cancelled) {
+                document.querySelector('.confirmation-card h2').textContent = 'Payment Cancelled';
+                document.querySelector('.confirmation-card p').textContent = 'Your PayHere Sandbox payment was cancelled. Your order remains unpaid.';
+                if (statusEl) { statusEl.textContent = 'Payment Cancelled'; statusEl.style.color = '#f59e0b'; }
             }
-            // Clear cart count badge on confirmation
-            const countSpan = document.getElementById('cartCount');
-            if (countSpan) countSpan.textContent = '0';
+
+            if (orderId) {
+                try {
+                    const response = await fetch('api/order_status.php?order_id=' + encodeURIComponent(orderId), { cache: 'no-store' });
+                    const data = await response.json();
+                    if (response.ok && data.status === 'success') {
+                        const order = data.order;
+                        document.getElementById('confirmOrderNo').textContent = order.order_number;
+                        document.getElementById('confirmName').textContent = order.customer_name;
+                        document.getElementById('confirmTotal').textContent = 'LKR ' + Number(order.total_amount).toLocaleString('en-US', { minimumFractionDigits: 2 });
+                        if (statusEl) {
+                            statusEl.textContent = order.payment_status === 'Paid' ? 'Paid & Processing' : order.payment_status;
+                            statusEl.style.color = order.payment_status === 'Paid' ? '#10b981' : '#f59e0b';
+                        }
+                    }
+                } catch (e) {}
+            }
         });
     </script>
 </body>
